@@ -5,7 +5,7 @@ const Listing = require("./models/listing.js");
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate= require("ejs-mate");
-
+const wrapAsync = require("./utils/wrapAsync.js")
 
 
 
@@ -53,14 +53,16 @@ app.get("/listings",async(req,res)=>{
     });
 
     // Create Route
-    app.post("/listings",async(req,res)=>{
+    app.post("/listings",wrapAsync(async(req,res,next) => {
+        if(!req.body.listing) {
+            throw new ExpressError(400,"Send valid Data for listing");
+        }
         // let{title,description,image,price,country,location}=req.body;
-        
-       const newListing= new Listing(req.body.listing);
+            const newListing= new Listing(req.body.listing);
        await newListing.save();
         res.redirect("/listings");
-        
-    });
+    })
+);
 
     // Edit Route
     app.get("/listings/:id/edit",async(req,res)=>{
@@ -98,6 +100,10 @@ app.get("/listings",async(req,res)=>{
 //     console.log("sample was saved");
 //     res.send("successful testing");
 // });
+
+app.use((err,req,res,next) =>{
+    res.send("Something went wrong!");
+})
 
 app.listen(8080,()=>{
     console.log("server is listening to port 8080");
