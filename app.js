@@ -1,12 +1,16 @@
 const express = require("express");
+const path = require("path");
 const app= express();
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
 const mongoose = require("mongoose");
 const Listing = require("./models/listing.js");
-const path = require("path");
+// const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate= require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync.js")
 const ExpressError = require("./utils/ExpressError.js");
+const {listingSchema} = require("./schema.js");
 
 
 const MONGO_URL="mongodb://127.0.0.1:27017/wanderlust";
@@ -33,11 +37,21 @@ app.get("/",(req,res)=>{
     res.send("Hi,i am root");
 });
 
+const validateListing = (req,res,next) =>{
+     let {error}=listingSchema.validate(req.body);
+        if(error){
+            let errMsg = error.details.map((el)=> el.message).join(",");
+            throw new ExpressError(400,error);
+        }else{
+            next();
+        }
+};
+
 // Index Route
-app.get("/listings",async(req,res)=>{
+app.get("/listings",wrapAsync(async(req,res)=>{
       const allListings= await Listing.find({});
       res.render("listings/index.ejs",{allListings});
-    });
+    }));
 
     // New Route
     app.get("/listings/new",(req,res)=>{
@@ -46,39 +60,28 @@ app.get("/listings",async(req,res)=>{
      
 
     //  Show Route
-    app.get("/listings/:id",async(req,res)=>{
+    app.get("/listings/:id",wrapAsync(async(req,res)=>{
         let{ id} = req.params;
         const listing = await Listing.findById(id);
         res.render("listings/show.ejs",{listing});
-    });
+    }));
 
     // Create Route
-    app.post("/listings",wrapAsync(async(req,res,next) => {
-        if(!req.body.listing) {
-            throw new ExpressError(400,"Send valid Data for listing");
-        }
-        // let{title,description,image,price,country,location}=req.body;
-            const newListing= new Listing(req.body.listing);
-            if(!newListing.title){
-                throw new ExpressError(400,"Title is missing");
-            }
-            if(!newListing.description){
-                throw new ExpressError(400,"description is missing");
-            }
-            if(!newListing.location){
-                throw new ExpressError(400,"location is missing");
-            }
-       await newListing.save();
+    app.post("/listings",
+        validateListing,
+        wrapAsync(async(req,res,next) => {
+        const newListing= new Listing(req.body.listing);   
+        await newListing.save();
         res.redirect("/listings");
     })
 );
 
     // Edit Route
-    app.get("/listings/:id/edit",async(req,res)=>{
+    app.get("/listings/:id/edit",wrapAsync(async(req,res)=>{
         let{ id} = req.params;
         const listing = await Listing.findById(id);
         res.render("listings/edit.ejs",{listing});
-    });
+    }));
 
 
     // update Route
@@ -124,8 +127,8 @@ app.use((req,res,next) => {
 
 // error middleware
 app.use((err,req,res,next) =>{
-    let { statusCode = 500, message = "Something went wrong!" } = err;
-    res.status(statusCode).send(message);
+    let { status = 500, message = "Something went wrong!" } = err;
+     res.status(status).render("error.ejs",{message: err.message});
 });
 
 app.listen(8080,()=>{
