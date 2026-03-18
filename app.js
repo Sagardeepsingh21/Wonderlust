@@ -4,7 +4,7 @@ const app= express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 const mongoose = require("mongoose");
-
+const session = require("express-session");
 // const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate= require("ejs-mate");
@@ -31,6 +31,14 @@ app.use(express.urlencoded({extended : true}));
 app.use(methodOverride("_method"));
 app.engine('ejs',ejsMate);
 app.use(express.static(path.join(__dirname, "public")));
+
+
+const sessionOptions ={
+    secret: "mysupersecretcode",
+    resave:false,
+    saveUninitialized:true,
+}
+app.use(session(sessionOptions));
 
 app.get("/",(req,res)=>{
     res.send("Hi,i am root");
