@@ -6,15 +6,15 @@
     <form  method="Post" action="/listings" novalidate class="needs-validation">
         <div>
              <label for="title" class="form-label">Title</label>
-        <input name="listing[title]" placeholder="Enter title" type="text" class="form-control" >
+        <input name="listing[title]" placeholder="Enter title" type="text" class="form-control" required>
         </div>
         <br>
         <div class="Valid-feedback">Title looks good!</div>
         <div>
             <label for="description" class="form-label">Description</label>
             <textarea 
-             placeholder="Enter description"
-            class="form-control" required>
+            name ="listing[description]" placeholder="Enter description" class="form-control" required>
+        
             </textarea>
              <div class="invalid-feedback">Enter description</div>
         </div>
