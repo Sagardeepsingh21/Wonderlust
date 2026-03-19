@@ -35,6 +35,10 @@ router.get("/",wrapAsync(async(req,res)=>{
 
     // Create Route
     router.post("/",
+         (req,res,next)=>{
+        console.log("BODY:", req.body);
+        next();
+    },
         validateListing,
         wrapAsync(async(req,res,next) => {
         const newListing= new Listing(req.body.listing);   
