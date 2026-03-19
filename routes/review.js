@@ -26,6 +26,7 @@ const validateReview = (req,res,next) =>{
           await listing.save();
 
           console.log("new review saved");
+             req.flash("success","New Review Created");
           res.redirect(`/listings/${req.params.id}`);
     }));
 
@@ -37,7 +38,7 @@ const validateReview = (req,res,next) =>{
 
             await Listing.findByIdAndUpdate(id, {$pull : {reviews: reviewId}});
             await Review.findByIdAndDelete(reviewId);
-
+                    req.flash("success","Review Deleted");
             res.redirect(`/listings/${id}`);
         })
     );
