@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
     },
 });
 
-console.log(typeof passportLocalMongoose); // should be "function"
+ // should be "function"
 
 userSchema.plugin(passportLocalMongoose);
 
