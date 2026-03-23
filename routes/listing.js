@@ -57,7 +57,7 @@ router.get("/",wrapAsync(async(req,res)=>{
     // Edit Route
     router.get("/:id/edit",isLoggedIn,wrapAsync(async(req,res)=>{
         let{ id} = req.params;
-        const listing = await Listing.findById(id).populate("reviews");
+        const listing = await Listing.findById(id).populate("reviews").populate("owner");
         res.render("listings/edit.ejs",{listing});
     }));
 
