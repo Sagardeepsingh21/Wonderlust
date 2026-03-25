@@ -21,7 +21,7 @@ try{
         }
         req.flash("success","welcome to wonderlust");
      res.redirect("/listings");
-     })
+     });
      
 } catch(e) {
     req.flash("error", e.message);
@@ -46,14 +46,14 @@ router.post("/login",
     }
 );
 
-router.get("/logout",(req,res)=>{
+router.get("/logout",(req,res,next)=>{
     req.logout((err)=>{
         if(err){
-            nect(err);
+            return next(err);
         }
         req.flash("success","you are logged out!");
         res.redirect("/listings");
-    })
+    });
 });
 
 
