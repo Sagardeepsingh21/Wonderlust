@@ -41,7 +41,7 @@ router.post("/login",
     }),
     async(req,res)=>{
         req.flash("success","Welcome to Wonderlust You are Logged In! ");
-        let redirectUrl = req.locals.redirectUrl || "/listings";
+        let redirectUrl = res.locals.redirectUrl || "/listings";
         res.redirect(redirectUrl);
     }
 );
