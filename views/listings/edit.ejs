@@ -3,9 +3,8 @@
         <div class="col-8 offset-2">
 
             <h3>Edit your Listning</h3>
-            <!-- <form method="POST" action="/listings/<%= listing._id %>?_method=PUT"> -->
-            <form method="POST" action="/listings/<%= listing._id %>">
-                <input type="hidden" name="_method" value="PUT">
+            <form method="POST" action="/listings/<%= listing._id %>?_method=PUT">
+            
                 <div class="mb-3">
                     <label for="title" class="form-label">Title</label>
                     <input name="listing[title]" value="<%= listing.title %>" type="text" class="form-control" required>
