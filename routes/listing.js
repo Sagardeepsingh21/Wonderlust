@@ -58,25 +58,35 @@ router.get("/",wrapAsync(async(req,res)=>{
 );
 
     // Edit Route
-    router.get("/:id/edit",isLoggedIn,isOwner,wrapAsync(async(req,res)=>{
-        let{ id} = req.params;
-        const listing = await Listing.findById(id).populate("reviews").populate("owner");
-        res.render("listings/edit.ejs",{listing});
-    }));
+    router.get("/:id/edit",
+    isLoggedIn,
+    isOwner,
+    wrapAsync(async (req, res) => {
+        let { id } = req.params;
+        const listing = await Listing.findById(id); // ✅ simple & correct
+        res.render("listings/edit.ejs", { listing });
+    })
+);
 
 
     // update Route
-    router.put("/:id",isLoggedIn,isOwner,validateListing,
-        wrapAsync(async(req,res)=>{
-             if(!req.body.listing) {
-            throw new ExpressError(400,"Send valid Data for listing");
-        }
-        let { id } =req.params;
-        await Listing.findByIdAndUpdate(id, { ...req.body.listing});
-        req.flash("success","Listing updated");
-        res.redirect(`/listings/${id}`);
-    })
-);
+//     router.put("/:id",isLoggedIn,isOwner,validateListing,
+//         wrapAsync(async(req,res)=>{
+//              if(!req.body.listing) {
+//             throw new ExpressError(400,"Send valid Data for listing");
+//         }
+//         let { id } =req.params;
+//         await Listing.findByIdAndUpdate(id, { ...req.body.listing});
+//         console.log("BODY:", req.body);
+//         req.flash("success","Listing updated");
+//         res.redirect(`/listings/${id}`);
+//     })
+// );
+
+router.put("/:id", (req, res) => {
+    console.log("BODY:", req.body);
+    res.send(req.body);
+});
 
     // Delete Route
     router.delete("/:id",isLoggedIn,isOwner,
