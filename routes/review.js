@@ -5,7 +5,7 @@ const ExpressError = require("../utils/ExpressError.js");
 const { reviewSchema} = require("../schema.js");
 const Review= require("../models/review.js");
 const Listing = require("../models/listing.js");
-const {isLoggedIn} = require("../middleware.js")
+const {isLoggedIn, isReviewAuthor} = require("../middleware.js")
 
 const validateReview = (req,res,next) =>{
      let {error}=reviewSchema.validate(req.body);
@@ -35,7 +35,7 @@ const validateReview = (req,res,next) =>{
     }));
 
     // Delete Review Route
-    router.delete("/:reviewId",
+    router.delete("/:reviewId",isLoggedIn,isReviewAuthor,
         wrapAsync(async (req,res)=>{
             let id = req.params.id.trim();
     let reviewId = req.params.reviewId.trim();
