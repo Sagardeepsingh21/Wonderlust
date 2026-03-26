@@ -3,13 +3,13 @@
     <div class="col-8 offset-2" >
         <br>
     <h3>Create a New Listing</h3>
-    <form  method="Post" action="/listings" novalidate class="needs-validation">
+    <form  method="POST" action="/listings" novalidate class="needs-validation">
         <div class="mb-3">
              <label for="title" class="form-label">Title</label>
         <input name="listing[title]" placeholder="Enter title" type="text" class="form-control" required>
         </div>
         <br>
-        <div class="Valid-feedback">Title looks good!</div>
+      
         <div>
             <label for="description" class="form-label">Description</label>
             <textarea 
