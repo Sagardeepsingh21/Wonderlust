@@ -6,6 +6,7 @@ const { listingSchema } = require("../schema.js");
 const ExpressError = require("../utils/ExpressError.js");
 const { isLoggedIn, isOwner } = require("../middleware.js");
 const { authorize } = require("passport");
+const listingController= require("../controllers/listings.js");
 
 const validateListing = (req, res, next) => {
     let { error } = listingSchema.validate(req.body);
@@ -17,11 +18,7 @@ const validateListing = (req, res, next) => {
     }
 };
 // Index Route
-router.get("/", wrapAsync(async (req, res) => {
-    const allListings = await Listing.find({});
-    res.set("Cache-Control", "no-store");
-    res.render("listings/index.ejs", { allListings });
-}));
+router.get("/", wrapAsync(listingController.index));
 
 // New Route
 router.get("/new", isLoggedIn, (req, res) => {
