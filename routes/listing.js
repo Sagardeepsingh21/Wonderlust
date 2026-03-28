@@ -17,18 +17,10 @@ const validateListing = (req, res, next) => {
         next();
     }
 };
-// Index Route
-router.get("/", wrapAsync(listingController.index));
 
-// New Route
-router.get("/new", isLoggedIn, listingController.renderNewform);
-
-
-//  Show Route
-router.get("/:id", wrapAsync(listingController.showListing));
-
-// Create Route
-router.post("/", isLoggedIn,
+router.route("/")
+.get( wrapAsync(listingController.index))
+.post(isLoggedIn,
     (req, res, next) => {
         console.log("BODY:", req.body);
         next();
@@ -36,19 +28,18 @@ router.post("/", isLoggedIn,
     validateListing,
     wrapAsync(listingController.createListing));
 
+// New Route
+router.get("/new", isLoggedIn, listingController.renderNewform);
+
+router.route("/:id")
+.get( wrapAsync(listingController.showListing))
+.put(isLoggedIn,isOwner,validateListing,wrapAsync(listingController.updatelistings))
+.delete( isLoggedIn, isOwner,wrapAsync(listingController.destroyListing));
+
 // Edit Route
 router.get("/:id/edit",
     isLoggedIn,
     isOwner,
     wrapAsync(listingController.renderEditform));
-
-
-// update Route
-router.put("/:id",
-    isLoggedIn,isOwner,validateListing,wrapAsync(listingController.updatelistings));
-
-
-// Delete Route
-router.delete("/:id", isLoggedIn, isOwner,wrapAsync(listingController.destroyListing));
 
 module.exports = router;
