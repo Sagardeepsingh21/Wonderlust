@@ -7,6 +7,8 @@ const ExpressError = require("../utils/ExpressError.js");
 const { isLoggedIn, isOwner } = require("../middleware.js");
 const { authorize } = require("passport");
 const listingController= require("../controllers/listings.js");
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
 
 const validateListing = (req, res, next) => {
     let { error } = listingSchema.validate(req.body);
@@ -20,13 +22,16 @@ const validateListing = (req, res, next) => {
 
 router.route("/")
 .get( wrapAsync(listingController.index))
-.post(isLoggedIn,
-    (req, res, next) => {
-        console.log("BODY:", req.body);
-        next();
-    },
-    validateListing,
-    wrapAsync(listingController.createListing));
+// .post(isLoggedIn,
+//     (req, res, next) => {
+//         console.log("BODY:", req.body);
+//         next();
+//     },
+//     validateListing,
+//     wrapAsync(listingController.createListing));
+.post(upload.single("listing[image]"),(req,res)=>{
+    res.send(req.file);
+});
 
 // New Route
 router.get("/new", isLoggedIn, listingController.renderNewform);
