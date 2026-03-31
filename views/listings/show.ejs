@@ -13,7 +13,11 @@
             <img src="<%= listing.image.url %>" class="card-img-top show-img" alt="listing_image">
             <div class="card-body">
                 <p class="card-text">Owned by<i>
-                        <%= listing.owner.username %>
+                       <% if (listing.owner) { %>
+    <%= listing.owner.username %>
+<% } else { %>
+    <span>Unknown Owner</span>
+<% } %>
                     </i></p>
                 <p class="card-text"> <i>
                         <%= listing.description %>
@@ -30,7 +34,7 @@
         </div>
         <br />
     </div>
-    <% if( currUser && currUser._id.equals(listing.owner._id)) { %>
+<% if (currUser && listing.owner && currUser._id.equals(listing.owner._id)) { %>
         <div class="btns">
             <a href="/listings/<%= listing._id%>/edit" class="btn btn-dark col-2 offset-3 edit-btn">Edit</a>
 
@@ -81,7 +85,11 @@
                         <div class="card col-5 ms-3 mb-3">
 
                             <div class="card-body">
-                                <h5 class="card-title">@<%= review.author.username %></h5>
+                                <h5 class="card-title"><% if (review.author) { %>
+    @<%= review.author.username %>
+<% } else { %>
+    @Unknown
+<% } %></h5>
                                 <p class="starability-result card-text" data-rating="<%= review.rating %>"> </p>
 
                                 <p class="card-text">

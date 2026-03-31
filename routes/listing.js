@@ -24,7 +24,7 @@ const validateListing = (req, res, next) => {
 router.route("/")
 .get( wrapAsync(listingController.index))
 .post(isLoggedIn,
-    upload.single("listing[image]"),validateListing,
+    upload.single("image"),validateListing,
     wrapAsync(listingController.createListing)
 );
 
@@ -33,7 +33,7 @@ router.get("/new", isLoggedIn, listingController.renderNewform);
 
 router.route("/:id")
 .get( wrapAsync(listingController.showListing))
-.put(isLoggedIn,isOwner,validateListing,wrapAsync(listingController.updatelistings))
+.put(isLoggedIn,isOwner,upload.single("image"),validateListing,wrapAsync(listingController.updatelistings))
 .delete( isLoggedIn, isOwner,wrapAsync(listingController.destroyListing));
 
 // Edit Route
