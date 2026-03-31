@@ -23,16 +23,10 @@ const validateListing = (req, res, next) => {
 
 router.route("/")
 .get( wrapAsync(listingController.index))
-// .post(isLoggedIn,
-//     (req, res, next) => {
-//         console.log("BODY:", req.body);
-//         next();
-//     },
-//     validateListing,
-//     wrapAsync(listingController.createListing));
-.post(upload.single("listing[image]"),(req,res)=>{
-    res.send(req.file);
-});
+.post(isLoggedIn,
+    upload.single("listing[image]"),validateListing,
+    wrapAsync(listingController.createListing)
+);
 
 // New Route
 router.get("/new", isLoggedIn, listingController.renderNewform);
